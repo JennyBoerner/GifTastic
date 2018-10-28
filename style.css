@@ -1,0 +1,18 @@
+button {
+    margin: 10px !important;
+    color: white !important;
+    background-color: teal;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 5px;
+  }
+
+.container {
+  margin: 0px !important;
+  padding: 0px !important;
+}
+
+.btn {
+    background-color: teal !important;
+    border: none !important;
+}
