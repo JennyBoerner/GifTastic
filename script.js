@@ -1,22 +1,27 @@
-var topics = ["Happy", "Excited", "Sad", "Scared", "Bored"];
+var topics = ["Cheerful", "Excited", "Somber", "Scared", "Bored"];
 
-for (var i = 0; i < topics.length; i++) {
-    var btn = document.createElement("BUTTON");
-    var t = document.createTextNode(topics[i]);
-    btn.setAttribute("data-emotion", topics[i]);
-    btn.appendChild(t);
-    document.getElementById("buttonDiv").appendChild(btn);
+// Add buttons to page
+function addButtons() {
+    $("#buttonDiv").empty();
+    for (var i = 0; i < topics.length; i++) {
+    var btn = $("<button>");
+    btn.text(topics[i]);
+    btn.attr("data-emotion", topics[i]);
+   $("#buttonDiv").append(btn);
+    }
 };
 
+// Display buttons to page
+addButtons();
+
+// Add new search text to the array and create all new buttons
 $("#addEmotion").on("click", function() {
-    var btn = document.createElement("BUTTON");
-    var t = document.createTextNode($("#emotion-input").val());
-    btn.setAttribute("data-emotion", $("#emotion-input").val());
-    topics.push($("#emotion-input").val())
-    btn.appendChild(t);
-    document.getElementById("buttonDiv").appendChild(btn);
+    var newbtn = $("#emotion-input").val();
+    topics.push(newbtn);
+    addButtons();
 })
 
+// Display the gif on click of the button
 $("button").on("click", function() {
     $("#gifs-appear-here").empty();
     var emotion = $(this).attr("data-emotion");
@@ -27,31 +32,36 @@ $("button").on("click", function() {
         url: queryURL,
         method: "GET"
     })
-        // After data comes back from the request
-        .then(function(response) {
-        console.log(queryURL);
 
-        // storing the data from the AJAX request in the results variable
-        var results = response.data;
+    .then(function(response) {
+    console.log(queryURL);
 
-        // Looping through each result item
-        for (var i = 0; i < results.length; i++) {
+    var results = response.data;
 
-            // Creating and storing a div tag
-            var emotionDiv = $("#gifs-appear-here");
-
-            // Creating a paragraph tag with the result item's rating
-            var p = $("<p>").text("Rating: " + results[i].rating);
-
-            // Creating and storing an image tag
-            var emotionImage = $("<img>");
-            // Setting the src attribute of the image to a property pulled off the result item
-            emotionImage.attr("src", results[i].images.fixed_height.url);
-
-            // Appending the paragraph and image tag to the emotionDiv
-            emotionDiv.append(p);
-            emotionDiv.append(emotionImage);
+    for (var i = 0; i < results.length; i++) {
+        var emotionDiv = $("#gifs-appear-here");
+        var p = $("<p>").text("Rating: " + results[i].rating);
+        var emotionImage = $("<img>");
+        emotionImage.attr("src", results[i].images.fixed_height_still.url);
+        emotionImage.attr("data-still", results[i].images.fixed_height_still.url);
+        emotionImage.attr("data-animate", results[i].images.fixed_height.url);
+        emotionImage.attr("data-state", "still");
+        emotionImage.addClass("gif");
+        emotionDiv.append(p);
+        emotionDiv.append(emotionImage);
         }
-        });
     });
+});
+
+// Display the animiated version or the still version on click
+$(document).on("click",".gif",function(){
+    var state = $(this).attr("data-state");
+    if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+    } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+    }
+});
 
