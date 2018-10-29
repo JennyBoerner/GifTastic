@@ -19,10 +19,14 @@ $("#addEmotion").on("click", function() {
     var newbtn = $("#emotion-input").val();
     topics.push(newbtn);
     addButtons();
+});
+
+$("#emotion-form").on("submit", function(event) {
+    event.preventDefault();
 })
 
 // Display the gif on click of the button
-$("button").on("click", function() {
+$("#buttonDiv").on("click", "button", function() {
     $("#gifs-appear-here").empty();
     var emotion = $(this).attr("data-emotion");
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
